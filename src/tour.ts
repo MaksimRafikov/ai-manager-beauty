@@ -3,6 +3,7 @@ import "driver.js/dist/driver.css";
 import { trackGoal } from "./metrika";
 
 const STORAGE_KEY = "ai-manager-tour-done";
+const INVITE_KEY = "ai-manager-tour-invite-seen";
 
 export type TourActions = {
   goOverviewSummary: () => void;
@@ -33,6 +34,27 @@ export function markTourDone(): void {
   } catch {
     /* ignore */
   }
+}
+
+export function hasSeenTourInvite(): boolean {
+  try {
+    return localStorage.getItem(INVITE_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
+export function markTourInviteSeen(): void {
+  try {
+    localStorage.setItem(INVITE_KEY, "1");
+  } catch {
+    /* ignore */
+  }
+}
+
+/** Invite first-time visitors to take the guided tour before browsing alone. */
+export function shouldOfferTour(): boolean {
+  return !hasCompletedTour() && !hasSeenTourInvite();
 }
 
 function resolveStepElement(step: DriveStep | undefined): Element | null {

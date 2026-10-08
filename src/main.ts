@@ -10,7 +10,13 @@ import {
 } from "./dashboard";
 import { escapeHtml } from "./format";
 import { initMetrika, trackGoal } from "./metrika";
-import { hasCompletedTour, startTour, type TourActions } from "./tour";
+import {
+  hasCompletedTour,
+  markTourInviteSeen,
+  shouldOfferTour,
+  startTour,
+  type TourActions,
+} from "./tour";
 import type { DemoPayload } from "./types";
 
 /** Formspree delivers email automatically; Telegram is fallback if POST fails. */
@@ -104,11 +110,27 @@ function renderPage(payload: DemoPayload): string {
   <header class="site-header">
     <a class="brand" href="#top">${escapeHtml(product)}</a>
     <nav class="site-nav">
-      <button type="button" class="linkish" id="btn-restart-tour">Пройти тур</button>
+      <button type="button" class="btn-tour" id="btn-restart-tour" aria-label="Пройти тур по дашборду, около 2 минут">
+        <span class="btn-tour-label">Пройти тур</span>
+        <span class="btn-tour-hint">2 мин</span>
+      </button>
       <a href="#dashboard">Дашборд</a>
       <a class="btn btn-small" href="#lead">Оставить заявку</a>
     </nav>
   </header>
+
+  <div class="tour-invite" id="tour-invite" hidden role="dialog" aria-modal="true" aria-labelledby="tour-invite-title">
+    <div class="tour-invite-backdrop" data-tour-invite-dismiss></div>
+    <div class="tour-invite-panel">
+      <p class="tour-invite-eyebrow">Демо · 8 шагов</p>
+      <h2 id="tour-invite-title">Сначала короткий тур?</h2>
+      <p class="tour-invite-lead">За две минуты покажем, как читать дашборд и кому администратор должен позвонить завтра. Можно кликать что угодно — сломать ничего нельзя.</p>
+      <div class="tour-invite-actions">
+        <button type="button" class="btn btn-accent" id="tour-invite-start">Пройти тур</button>
+        <button type="button" class="btn btn-ghost" id="tour-invite-skip" data-tour-invite-dismiss>Смотреть самому</button>
+      </div>
+    </div>
+  </div>
 
   <main id="top">
     <section class="hero">
@@ -116,7 +138,7 @@ function renderPage(payload: DemoPayload): string {
       <h1>${escapeHtml(product)}</h1>
       <p class="hero-lead">Видит, кто из клиентской базы удерживает выручку, кто тихо уходит, и кому администратор должен позвонить завтра — без Excel-танцев и без выгрузки базы наружу.</p>
       <div class="hero-cta">
-        <a class="btn btn-accent" href="#dashboard" id="cta-try">Попробовать дашборд</a>
+        <button type="button" class="btn btn-accent" id="cta-try">Пройти тур по дашборду</button>
         <a class="btn btn-ghost" href="#lead">Оставить заявку</a>
       </div>
     </section>
@@ -337,19 +359,60 @@ async function main(): Promise<void> {
     },
   };
 
+  const tourBtn = document.getElementById("btn-restart-tour");
+  const invite = document.getElementById("tour-invite");
+
+  const setTourBtnAttention = (on: boolean): void => {
+    tourBtn?.classList.toggle("is-attention", on);
+  };
+
+  setTourBtnAttention(!hasCompletedTour());
+
+  const hideInvite = (): void => {
+    if (!invite || invite.hidden) return;
+    invite.hidden = true;
+    document.body.classList.remove("tour-invite-open");
+  };
+
+  const dismissInvite = (): void => {
+    if (!invite || invite.hidden) return;
+    hideInvite();
+    markTourInviteSeen();
+    trackGoal("tour_invite_dismiss");
+  };
+
+  const openInvite = (): void => {
+    if (!invite) return;
+    invite.hidden = false;
+    document.body.classList.add("tour-invite-open");
+    document.getElementById("tour-invite-start")?.focus();
+    trackGoal("tour_invite_shown");
+  };
+
   const launchTour = (): void => {
+    const fromInvite = Boolean(invite && !invite.hidden);
+    hideInvite();
+    markTourInviteSeen();
+    if (fromInvite) trackGoal("tour_invite_accept");
+    setTourBtnAttention(false);
     document.getElementById("dashboard")?.scrollIntoView({ behavior: "smooth", block: "start" });
     window.setTimeout(() => startTour(tourActions), 400);
   };
 
-  document.getElementById("btn-restart-tour")?.addEventListener("click", launchTour);
-  document.getElementById("cta-try")?.addEventListener("click", (e) => {
-    e.preventDefault();
-    launchTour();
+  tourBtn?.addEventListener("click", launchTour);
+  document.getElementById("cta-try")?.addEventListener("click", launchTour);
+  document.getElementById("tour-invite-start")?.addEventListener("click", launchTour);
+
+  invite?.querySelectorAll("[data-tour-invite-dismiss]").forEach((el) => {
+    el.addEventListener("click", dismissInvite);
   });
 
-  if (!hasCompletedTour()) {
-    window.setTimeout(launchTour, 900);
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && invite && !invite.hidden) dismissInvite();
+  });
+
+  if (shouldOfferTour()) {
+    window.setTimeout(openInvite, 600);
   }
 
   const scheme = document.getElementById("flow-scheme");
