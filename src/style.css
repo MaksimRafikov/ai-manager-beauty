@@ -674,6 +674,18 @@ textarea:focus-visible,
   font-family: var(--font-display);
 }
 
+.howto-note {
+  margin: 1rem 0 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.45;
+  max-width: 42rem;
+}
+
+.howto-note + .accordion {
+  margin-top: 1rem;
+}
+
 .lead-form {
   display: grid;
   gap: 0.8rem;
