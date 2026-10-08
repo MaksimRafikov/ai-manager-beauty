@@ -76,6 +76,8 @@ export interface DemoPayload {
     salon_name: string;
     city: string;
     caption: string;
+    /** Demo slice anchor, ISO date YYYY-MM-DD */
+    anchor_date?: string;
     segment_actions: Record<string, string>;
     segment_order: string[];
     client_count_approx: number;

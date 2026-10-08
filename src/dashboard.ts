@@ -1,7 +1,7 @@
 import type { DemoPayload, DashboardSlice, MoreNav, OverviewTab, PrimaryNav } from "./types";
 import { getSlice } from "./data";
 import { escapeHtml, formatMoney, formatNumber, formatPct } from "./format";
-import { renderAdsBars, renderSegmentPies, resizeCharts } from "./charts";
+import { disposeCharts, renderAdsBars, renderSegmentPies, resizeCharts } from "./charts";
 import { downloadCallListExcel, downloadPrepayExcel } from "./excel";
 import { trackGoal } from "./metrika";
 
@@ -77,6 +77,13 @@ function callTable(rows: DashboardSlice["call_lists"]["ukhodyat"], empty: string
   </div>`;
 }
 
+function formatDemoAnchor(iso?: string): string | null {
+  if (!iso) return null;
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
+  if (!m) return null;
+  return `${m[3]}.${m[2]}.${m[1]}`;
+}
+
 export function renderDashboardShell(payload: DemoPayload, state: DashboardState): string {
   const slice = getSlice(payload, state.branch, state.period);
   const branchOpts = payload.filters.branches
@@ -91,6 +98,10 @@ export function renderDashboardShell(payload: DemoPayload, state: DashboardState
         `<option value="${escapeHtml(p.key)}" ${p.key === state.draftPeriod ? "selected" : ""}>${escapeHtml(p.label)}</option>`,
     )
     .join("");
+  const anchorLabel = formatDemoAnchor(payload.meta.anchor_date);
+  const demoPill = anchorLabel
+    ? `демо · срез на ${anchorLabel}`
+    : "пример салона · демо-данные";
 
   return `
   <div class="demo-window" id="demo-app">
@@ -99,7 +110,7 @@ export function renderDashboardShell(payload: DemoPayload, state: DashboardState
         <strong>${escapeHtml(payload.meta.salon_name)}</strong>
         <span class="demo-city">${escapeHtml(payload.meta.city)}</span>
       </div>
-      <span class="demo-pill">пример салона · демо-данные</span>
+      <span class="demo-pill">${escapeHtml(demoPill)}</span>
     </div>
     <div class="demo-shell">
       <aside class="demo-sidebar" id="dash-filters">
@@ -367,6 +378,7 @@ export function mountDashboard(
   state: DashboardState,
   hooks: DashboardHooks,
 ): void {
+  disposeCharts();
   root.innerHTML = renderDashboardShell(payload, state);
   const slice = getSlice(payload, state.branch, state.period);
 
@@ -412,9 +424,11 @@ export function mountDashboard(
   const moreToggle = root.querySelector<HTMLButtonElement>("#nav-more-toggle");
   const moreMenu = root.querySelector<HTMLElement>("#nav-more-menu");
   const closeMoreMenu = (): void => {
-    if (!moreMenu || !moreToggle) return;
-    moreMenu.setAttribute("hidden", "");
-    moreToggle.setAttribute("aria-expanded", "false");
+    const menu = root.querySelector<HTMLElement>("#nav-more-menu");
+    const toggle = root.querySelector<HTMLButtonElement>("#nav-more-toggle");
+    if (!menu || !toggle) return;
+    menu.setAttribute("hidden", "");
+    toggle.setAttribute("aria-expanded", "false");
   };
   moreToggle?.addEventListener("click", (e) => {
     e.stopPropagation();
@@ -427,11 +441,15 @@ export function mountDashboard(
       closeMoreMenu();
     }
   });
-  root.addEventListener("click", (e) => {
-    if (!moreMenu || moreMenu.hasAttribute("hidden")) return;
-    if ((e.target as HTMLElement | null)?.closest(".nav-more")) return;
-    closeMoreMenu();
-  });
+  if (root.dataset.moreMenuBound !== "1") {
+    root.dataset.moreMenuBound = "1";
+    root.addEventListener("click", (e) => {
+      const menu = root.querySelector<HTMLElement>("#nav-more-menu");
+      if (!menu || menu.hasAttribute("hidden")) return;
+      if ((e.target as HTMLElement | null)?.closest(".nav-more")) return;
+      closeMoreMenu();
+    });
+  }
   root.querySelectorAll<HTMLButtonElement>("[data-more]").forEach((btn) => {
     btn.addEventListener("click", () => {
       state.more = btn.dataset.more as MoreNav;

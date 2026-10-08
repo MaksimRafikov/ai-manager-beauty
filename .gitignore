@@ -5,3 +5,8 @@ dist
 .env
 .env.*
 !.env.example
+
+# Meeting recordings / transcripts (may contain real business details)
+*.m4a
+новая-запись-*.json
+запись-*.json

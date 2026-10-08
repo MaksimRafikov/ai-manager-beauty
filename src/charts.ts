@@ -18,11 +18,22 @@ const charts = new Map<string, echarts.ECharts>();
 
 function ensureChart(el: HTMLElement, key: string): echarts.ECharts {
   let chart = charts.get(key);
+  if (chart && chart.getDom() !== el) {
+    chart.dispose();
+    charts.delete(key);
+    chart = undefined;
+  }
   if (!chart) {
     chart = echarts.init(el, undefined, { renderer: "canvas" });
     charts.set(key, chart);
   }
   return chart;
+}
+
+/** Dispose all chart instances (call before replacing dashboard DOM). */
+export function disposeCharts(): void {
+  charts.forEach((chart) => chart.dispose());
+  charts.clear();
 }
 
 export function renderSegmentPies(clientsEl: HTMLElement, revenueEl: HTMLElement, segments: SegmentRow[]): void {

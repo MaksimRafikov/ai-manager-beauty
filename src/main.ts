@@ -27,7 +27,7 @@ type LeadPayload = {
 
 function buildLeadMessage(data: LeadPayload): string {
   const lines = [
-    "Заявка на пилот — AI-управляющий салоном красоты",
+    "Заявка на пилот — AI-маркетолог салона красоты",
     "",
     data.name ? `Имя: ${data.name}` : null,
     `Контакт: ${data.contact}`,
@@ -54,7 +54,7 @@ function setFormStatus(el: HTMLElement | null, message: string, state?: "ok" | "
 
 async function submitLeadToFormspree(data: LeadPayload): Promise<void> {
   const body = new FormData();
-  body.set("_subject", "Заявка на пилот — AI-управляющий салоном красоты");
+  body.set("_subject", "Заявка на пилот — AI-маркетолог салона красоты");
   body.set("name", data.name);
   body.set("contact", data.contact);
   body.set("salon", data.salon);

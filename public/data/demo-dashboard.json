@@ -1,9 +1,9 @@
 {
   "meta": {
-    "product_name": "AI-управляющий салоном красоты",
+    "product_name": "AI-маркетолог салона красоты",
     "salon_name": "M-Salon",
     "city": "Уфа",
-    "caption": "Демо-данные · три филиала · не боевой салон",
+    "caption": "Демо-данные · три филиала · срез на 27.09.2026 · не боевой салон",
     "generated_at": "2026-10-02T12:11:52",
     "ref_date": "2026-09-30",
     "anchor_date": "2026-09-27",
@@ -66,11 +66,11 @@
       },
       {
         "key": "current_month",
-        "label": "Текущий месяц"
+        "label": "Сентябрь 2026 (демо)"
       },
       {
         "key": "year",
-        "label": "Текущий календарный год"
+        "label": "2026 год"
       }
     ],
     "default_branch": "all",
@@ -4862,7 +4862,7 @@
     "all::current_month": {
       "branch_key": "all",
       "period_key": "current_month",
-      "period_label": "Текущий месяц",
+      "period_label": "Сентябрь 2026 (демо)",
       "date_range": "01.09.2026 — 27.09.2026 (в данных: 01.09.2026 — 26.09.2026)",
       "kpis": {
         "clients": 1687,
@@ -11944,7 +11944,7 @@
     "Север::current_month": {
       "branch_key": "Север",
       "period_key": "current_month",
-      "period_label": "Текущий месяц",
+      "period_label": "Сентябрь 2026 (демо)",
       "date_range": "01.09.2026 — 27.09.2026 (в данных: 01.09.2026 — 26.09.2026)",
       "kpis": {
         "clients": 570,
@@ -18990,7 +18990,7 @@
     "Центр::current_month": {
       "branch_key": "Центр",
       "period_key": "current_month",
-      "period_label": "Текущий месяц",
+      "period_label": "Сентябрь 2026 (демо)",
       "date_range": "01.09.2026 — 27.09.2026 (в данных: 01.09.2026 — 26.09.2026)",
       "kpis": {
         "clients": 556,
@@ -26036,7 +26036,7 @@
     "Юг::current_month": {
       "branch_key": "Юг",
       "period_key": "current_month",
-      "period_label": "Текущий месяц",
+      "period_label": "Сентябрь 2026 (демо)",
       "date_range": "01.09.2026 — 27.09.2026 (в данных: 01.09.2026 — 26.09.2026)",
       "kpis": {
         "clients": 561,
