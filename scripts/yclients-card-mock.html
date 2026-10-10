@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=520" />
+    <title>Карточка клиента — макет</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Segoe UI", system-ui, sans-serif;
+        background: #eef1f4;
+        color: #2c2c2c;
+      }
+      .frame {
+        width: 480px;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        border: 1px solid #dde3ea;
+      }
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 14px;
+        background: #f7f9fb;
+        border-bottom: 1px solid #e8ecef;
+        font-size: 12px;
+        color: #6b7280;
+      }
+      .topbar strong {
+        color: #374151;
+        font-weight: 600;
+      }
+      .content {
+        padding: 14px 16px 16px;
+      }
+      h1 {
+        margin: 0 0 8px;
+        font-size: 22px;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+      }
+      .meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-bottom: 12px;
+        align-items: center;
+      }
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        padding: 3px 9px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+      }
+      .chip-segment {
+        background: #fef3c7;
+        color: #92400e;
+        border: 1px solid #fcd34d;
+      }
+      .chip-muted {
+        background: #f3f4f6;
+        color: #4b5563;
+      }
+      .section-title {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: #9ca3af;
+        margin: 0 0 6px;
+      }
+      .row {
+        display: flex;
+        justify-content: space-between;
+        padding: 7px 0;
+        border-bottom: 1px solid #f0f2f5;
+        font-size: 14px;
+      }
+      .row:last-of-type {
+        border-bottom: 0;
+      }
+      .row span:first-child {
+        color: #6b7280;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="frame">
+      <div class="topbar">
+        <span>Клиент · карточка</span>
+        <strong>CRM салона</strong>
+      </div>
+      <div class="content">
+        <h1>Анна К.</h1>
+        <div class="meta">
+          <span class="chip chip-segment">Уходят</span>
+          <span class="chip chip-muted">группа от панели</span>
+        </div>
+        <p class="section-title">Кратко</p>
+        <div class="row"><span>Последний визит</span><span>47 дней назад</span></div>
+        <div class="row"><span>Визитов за год</span><span>8</span></div>
+        <div class="row"><span>Любимый филиал</span><span>Центр</span></div>
+      </div>
+    </div>
+  </body>
+</html>

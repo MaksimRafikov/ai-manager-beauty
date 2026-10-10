@@ -28,17 +28,21 @@ type LeadPayload = {
   contact: string;
   salon: string;
   branches: string;
+  base_size: string;
   comment: string;
 };
 
+const LEAD_SUBJECT = "Заявка — AI-маркетолог салона красоты";
+
 function buildLeadMessage(data: LeadPayload): string {
   const lines = [
-    "Заявка на пилот — AI-маркетолог салона красоты",
+    LEAD_SUBJECT,
     "",
     data.name ? `Имя: ${data.name}` : null,
     `Контакт: ${data.contact}`,
     data.salon ? `Салон: ${data.salon}` : null,
     data.branches ? `Филиалов: ${data.branches}` : null,
+    data.base_size ? `Клиентов в базе (примерно): ${data.base_size}` : null,
     data.comment ? `Комментарий: ${data.comment}` : null,
   ].filter((line): line is string => line !== null);
 
@@ -60,11 +64,12 @@ function setFormStatus(el: HTMLElement | null, message: string, state?: "ok" | "
 
 async function submitLeadToFormspree(data: LeadPayload): Promise<void> {
   const body = new FormData();
-  body.set("_subject", "Заявка на пилот — AI-маркетолог салона красоты");
+  body.set("_subject", LEAD_SUBJECT);
   body.set("name", data.name);
   body.set("contact", data.contact);
   body.set("salon", data.salon);
   body.set("branches", data.branches);
+  if (data.base_size) body.set("base_size", data.base_size);
   if (data.comment) body.set("comment", data.comment);
   body.set("source", "ai-manager-beauty");
 
@@ -80,7 +85,7 @@ const METHOD_SEGMENTS: { name: string; action: string; text: string }[] = [
   {
     name: "Ядро",
     action: "держать",
-    text: "Те, на ком салон держится. Сюда попадают не только частые гости: клиентка с редким, но крупным окрашиванием тоже в Ядре. Метод учитывает и частоту, и сумму.",
+    text: "Постоянные клиенты — те, на ком салон держится. Сюда попадают не только частые гости: клиентка с редким, но крупным окрашиванием тоже в Ядре. Учитываем и частоту, и сумму.",
   },
   {
     name: "Новички",
@@ -134,9 +139,9 @@ function renderPage(payload: DemoPayload): string {
 
   <main id="top">
     <section class="hero">
-      <p class="eyebrow">Для салонов красоты, косметологий и SPA · YClients</p>
-      <h1>${escapeHtml(product)}</h1>
-      <p class="hero-lead">Видит, кто из клиентской базы удерживает выручку, кто тихо уходит, и кому администратор должен позвонить завтра — без Excel-танцев и без выгрузки базы наружу.</p>
+      <p class="hero-product">${escapeHtml(product)}</p>
+      <h1>Кто реально приносит прибыль вашему салону?</h1>
+      <p class="hero-lead">Диагностика клиентской базы из YClients: кто приносит выручку, кто уходит и кому администратор позвонит завтра.</p>
       <div class="hero-cta">
         <button type="button" class="btn btn-accent" id="cta-try">Пройти тур по дашборду</button>
         <a class="btn btn-ghost" href="#lead">Оставить заявку</a>
@@ -148,9 +153,8 @@ function renderPage(payload: DemoPayload): string {
         <h2>Выручка у вас одна, а клиенты — разные</h2>
         <div class="method-copy">
           <p>О каждом вашем клиенте YClients уже знает три простые вещи: когда человек был у вас в последний раз, как часто он приходит и сколько у вас оставляет. Вместе эти три факта говорят о клиенте больше, чем любая общая цифра по салону.</p>
-          <p>Беда общих цифр в том, что они усредняют и успокаивают. Выручка может месяцами стоять ровно, и кажется, что всё нормально. А под этой ровной линией происходит неприятное: постоянные клиентки потихоньку перестали приходить, и их место заняли новые. Денег столько же, но салон теперь работает тяжелее и платит за привлечение больше. Собственник видит ровную линию и не понимает, почему стало труднее.</p>
-          <p>Если же посмотреть на базу по тем трём признакам, люди сами собираются в понятные группы. И это главное: для каждой группы есть своё, одно и понятное действие.</p>
-          <p class="method-note">У метода есть название (RFM), но оно вам не понадобится.</p>
+          <p>Общая цифра по салону не говорит, кто приносит деньги. Выручка стоит или падает, бюджет на рекламу растёт, а непонятно, кого вы теряете: постоянных, новичков или тех, кто пришёл по рекламе и не вернулся.</p>
+          <p>Если посмотреть на базу по этим трём признакам, гости сами собираются в понятные группы. Главная — Ядро — постоянные клиенты: на них держится выручка. И для каждой группы есть одно понятное действие.</p>
         </div>
         <div class="flow-scheme" id="flow-scheme" aria-hidden="true">
           <div class="flow-source">Клиентская база</div>
@@ -185,10 +189,35 @@ function renderPage(payload: DemoPayload): string {
             <li>Собственник смотрит сводку</li>
             <li>Управляющий забирает списки на обзвон</li>
             <li>Администратор звонит</li>
-            <li>Ярлыки уходят обратно в CRM</li>
+            <li>Группы автоматически проставляются в карточках YClients</li>
           </ol>
         </details>
       </aside>
+    </section>
+
+    <section class="labels-promo" id="labels-promo">
+      <div class="labels-promo-copy">
+        <h2>Группы сами появляются в карточках YClients</h2>
+        <p>Программа сама проставляет группу каждому клиенту в его карточке YClients. Не нужно вручную ставить ярлыки тысячам гостей.</p>
+        <p>Администратор открывает карточку и сразу видит: перед ним постоянный клиент или тот, кто уходит.</p>
+        <button type="button" class="btn btn-ghost" id="labels-promo-demo">Посмотреть в демо</button>
+      </div>
+      <div class="client-card-mock" aria-hidden="true">
+        <div class="client-card-head">
+          <span class="client-card-avatar">АК</span>
+          <div>
+            <strong>Анна К.</strong>
+            <span class="client-card-meta">Последний визит 74 дня назад</span>
+          </div>
+        </div>
+        <div class="client-card-labels">
+          <span class="client-chip">Уходят</span>
+        </div>
+        <dl class="client-card-facts">
+          <div><dt>Визитов</dt><dd>14</dd></div>
+          <div><dt>Услуга</dt><dd>Окрашивание</dd></div>
+        </dl>
+      </div>
     </section>
 
     <section class="roles" id="roles">
@@ -196,7 +225,7 @@ function renderPage(payload: DemoPayload): string {
       <div class="roles-grid">
         <article>
           <h3>Собственник</h3>
-          <p>Пять минут после обновления: жива ли доля Ядра, кого возвращать на этой неделе, не размывается ли выручка новыми.</p>
+          <p>Пять минут после обновления: какая доля выручки приходится на постоянных клиентов и кого возвращать на этой неделе.</p>
         </article>
         <article>
           <h3>Управляющий</h3>
@@ -212,29 +241,29 @@ function renderPage(payload: DemoPayload): string {
     <section class="howto" id="howto">
       <h2>Как устроено и что с данными</h2>
       <div class="howto-grid">
-        <article>
-          <h3>Локально у салона</h3>
-          <p>Программа ставится на компьютер салона. База клиентов не уезжает на чужой сервер «для аналитики».</p>
-        </article>
-        <article>
-          <h3>Только чтение YClients</h3>
-          <p>Читает записи и клиентов. Записывает лишь ярлыки групп — если вы это включите. Токены менеджерам не раздаются.</p>
-        </article>
         <article id="data-safety">
-          <h3>Честно о границах</h3>
-          <p>Не ведёт запись клиентов, не заменяет CRM и не рассылает сообщения сам. Это управленческий слой поверх YClients.</p>
+          <h3>Данные остаются у вас</h3>
+          <p>Программа работает на компьютере салона. База клиентов не уходит в интернет — это защита от утечки.</p>
+        </article>
+        <article>
+          <h3>Интеграция с YClients</h3>
+          <p>Интегрируем панель с вашим YClients: она берёт записи и клиентов и проставляет группы в карточки.</p>
+        </article>
+        <article>
+          <h3>Границы</h3>
+          <p>Не заменяет CRM и не рассылает сообщения. Показывает, кому и зачем позвонить.</p>
         </article>
       </div>
-      <p class="howto-note">В сети один и тот же гость с разных филиалов считается одним клиентом, если совпадает номер телефона.</p>
+      <p class="howto-note">Убираем дубли: один гость с разных филиалов или 8… и +7… — один клиент.</p>
       <details class="accordion">
-        <summary>Подробнее про метод (для тех, кто хочет копать)</summary>
-        <p>Группы строятся по давности визита, частоте и сумме. Пороги подбираются под салон. Формулы и шкалы не нужны, чтобы пользоваться списками — они нужны, чтобы доверять результату.</p>
+        <summary>Как считаются группы</summary>
+        <p>Группы строятся по трём признакам: давность последнего визита, частота визитов и сумма. Пороги настраиваем под ваш салон: у окрашивания, стрижки и маникюра разный ритм.</p>
       </details>
     </section>
 
     <section class="lead" id="lead">
-      <h2>Оставить заявку на пилот</h2>
-      <p>Покажем дашборд на ваших данных. Ответим в ближайшее время. Цены — по заявке.</p>
+      <h2>Оставить заявку</h2>
+      <p>Внедрение от 50&nbsp;000&nbsp;₽, точная цена после оценки базы. Срок 1–2 недели. Ответим в ближайшее время.</p>
       <form class="lead-form" id="lead-form" novalidate>
         <input type="text" name="company_website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
         <label>Имя
@@ -248,6 +277,9 @@ function renderPage(payload: DemoPayload): string {
         </label>
         <label>Число филиалов
           <input name="branches" type="number" min="1" max="50" required value="1" />
+        </label>
+        <label>Примерно клиентов в базе <span class="optional">необязательно</span>
+          <input name="base_size" inputmode="numeric" maxlength="20" placeholder="например, 5 000" />
         </label>
         <label>Комментарий
           <textarea name="comment" rows="3" maxlength="500"></textarea>
@@ -402,6 +434,11 @@ async function main(): Promise<void> {
   tourBtn?.addEventListener("click", launchTour);
   document.getElementById("cta-try")?.addEventListener("click", launchTour);
   document.getElementById("tour-invite-start")?.addEventListener("click", launchTour);
+  document.getElementById("labels-promo-demo")?.addEventListener("click", () => {
+    tourActions.goLabels();
+    trackGoal("labels_promo_demo");
+    document.getElementById("dashboard")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
 
   invite?.querySelectorAll("[data-tour-invite-dismiss]").forEach((el) => {
     el.addEventListener("click", dismissInvite);
@@ -456,6 +493,7 @@ async function main(): Promise<void> {
       contact: String(fd.get("contact") || "").trim(),
       salon: String(fd.get("salon") || "").trim(),
       branches: String(fd.get("branches") || "").trim(),
+      base_size: String(fd.get("base_size") || "").trim(),
       comment: String(fd.get("comment") || "").trim(),
     };
 

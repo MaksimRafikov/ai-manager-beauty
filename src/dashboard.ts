@@ -21,6 +21,29 @@ export type DashboardHooks = {
   onExcel: () => void;
 };
 
+const SEGMENT_CALL_LISTS: Record<string, string> = {
+  Уходят: "list-ukhodyat",
+  Ядро: "list-yadro",
+  Новички: "list-novichki",
+};
+
+const SEGMENT_NO_LIST_NOTES: Record<string, string> = {
+  Растут:
+    "«Растут» уже ходят сами — отдельного списка на обзвон нет. Звоним по спискам «Уходят», «Ядро без будущей записи» и «Новички».",
+  Спящие:
+    "«Спящим» не звоним: на них не тратим время администратора и бюджет.",
+};
+
+function focusCallList(root: HTMLElement, listId: string): void {
+  const block = root.querySelector<HTMLElement>(`#${listId}`);
+  if (!block) return;
+  block.classList.add("is-focused");
+  // The guided tour positions its own highlight; scrolling under it shifts the stage.
+  if (!document.body.classList.contains("driver-active")) {
+    block.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+}
+
 export function initialState(payload: DemoPayload): DashboardState {
   return {
     branch: payload.filters.default_branch,
@@ -175,6 +198,7 @@ function renderSummary(slice: DashboardSlice): string {
       ${kpiCard("Средний чек", formatMoney(k.avg_check))}
       ${kpiCard("Неявки", formatPct(k.noshow_pct_12m))}
     </div>
+    <p class="segment-hint">Нажмите на группу, чтобы открыть список клиентов</p>
     <div class="charts-row">
       <div class="chart-card">
         <h3>Состав базы · клиенты</h3>
@@ -226,6 +250,7 @@ function renderSummary(slice: DashboardSlice): string {
         )
         .join("")}
     </div>
+    <p class="segment-note" id="segment-note" role="status" aria-live="polite"></p>
     </div>
   </section>`;
 }
@@ -236,21 +261,21 @@ function renderCalls(slice: DashboardSlice): string {
   const novichki = slice.call_lists.novichki;
   return `
   <section id="calls-panel">
-    <article class="list-block">
+    <article class="list-block" id="list-ukhodyat">
       <div class="list-head">
         <h3>Уходят — топ-20</h3>
         <button type="button" class="btn btn-small excel-btn" data-excel="ukhodyat" ${ukhodyat.length ? "" : "disabled title=\"Список пуст на этом периоде — выберите «Вся база с 2023»\""}>Скачать Excel</button>
       </div>
       ${callTable(ukhodyat, "В группе «Уходят» нет клиентов по фильтру. На коротком периоде так бывает — попробуйте «Вся база с 2023».")}
     </article>
-    <article class="list-block">
+    <article class="list-block" id="list-yadro">
       <div class="list-head">
         <h3>Ядро без будущей записи — топ-20</h3>
         <button type="button" class="btn btn-small excel-btn" data-excel="yadro" ${yadro.length ? "" : "disabled title=\"Список пуст\""}>Скачать Excel</button>
       </div>
       ${callTable(yadro, "У всех из «Ядра» уже есть запись вперёд.")}
     </article>
-    <article class="list-block">
+    <article class="list-block" id="list-novichki">
       <div class="list-head">
         <h3>Новички — дожим — топ-20</h3>
         <button type="button" class="btn btn-small excel-btn" data-excel="novichki" ${novichki.length ? "" : "disabled title=\"Список пуст\""}>Скачать Excel</button>
@@ -460,12 +485,18 @@ export function mountDashboard(
 
   const onSegment = (name: string) => {
     hooks.onSegmentClick(name);
-    if (name === "Уходят") {
-      state.primary = "overview";
-      state.overviewTab = "calls";
-      state.more = "none";
-      mountDashboard(root, payload, state, hooks);
+    trackGoal("segment_open", { segment: name });
+    const listId = SEGMENT_CALL_LISTS[name];
+    if (!listId) {
+      const note = root.querySelector<HTMLElement>("#segment-note");
+      if (note) note.textContent = SEGMENT_NO_LIST_NOTES[name] ?? "";
+      return;
     }
+    state.primary = "overview";
+    state.overviewTab = "calls";
+    state.more = "none";
+    mountDashboard(root, payload, state, hooks);
+    focusCallList(root, listId);
   };
   root.querySelectorAll<HTMLElement>("[data-segment]").forEach((el) => {
     el.addEventListener("click", () => onSegment(el.dataset.segment || ""));
@@ -521,7 +552,7 @@ export function mountDashboard(
   requestAnimationFrame(() => {
     const clients = root.querySelector<HTMLElement>("#chart-clients");
     const revenue = root.querySelector<HTMLElement>("#chart-revenue");
-    if (clients && revenue) renderSegmentPies(clients, revenue, slice.segments);
+    if (clients && revenue) renderSegmentPies(clients, revenue, slice.segments, onSegment);
     const ads = root.querySelector<HTMLElement>("#chart-ads");
     if (ads) renderAdsBars(ads, slice.ads.channels);
     resizeCharts();

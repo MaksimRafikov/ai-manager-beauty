@@ -11,6 +11,8 @@
   --teal: #1f6f5b;
   --teal-soft: #d7ebe3;
   --rose: #b86b5a;
+  /* Keep in sync with SEGMENT_COLORS in charts.ts */
+  --seg-ukhodyat: #b86b5a;
   --font-display: "Fraunces", "Times New Roman", serif;
   --font-body: "Manrope", "Segoe UI", sans-serif;
   --shadow: 0 18px 50px rgba(20, 36, 30, 0.08);
@@ -241,12 +243,20 @@ body.tour-invite-open {
   margin: 0 0 0.8rem;
 }
 
+.hero-product {
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 2vw, 1.3rem);
+  font-weight: 600;
+  color: var(--teal);
+  margin: 0 0 0.9rem;
+}
+
 .hero h1 {
   font-family: var(--font-display);
   font-size: clamp(2.2rem, 5.5vw, 3.6rem);
   line-height: 1.05;
   margin: 0 0 1rem;
-  max-width: 14ch;
+  max-width: 18ch;
 }
 
 .hero-lead {
@@ -719,12 +729,36 @@ textarea:focus-visible,
   font-size: 0.78rem;
 }
 
-.segment-row {
+.segment-row,
+.segment-card,
+.chart-card .chart {
   cursor: pointer;
 }
 
 .segment-row:hover {
   background: var(--teal-soft);
+}
+
+.segment-hint {
+  margin: 0 0 0.6rem;
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--teal);
+}
+
+.segment-note {
+  margin: 0.6rem 0 0;
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+}
+
+.segment-note:empty {
+  display: none;
+}
+
+.list-block.is-focused {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 2px var(--teal-soft);
 }
 
 .action-pill {
@@ -768,6 +802,105 @@ textarea:focus-visible,
   border: 1px solid var(--line);
   border-radius: 12px;
   padding: 0.8rem 1rem;
+}
+
+.labels-promo {
+  width: min(100%, var(--content-max));
+  margin-inline: auto;
+  padding: 1rem var(--page-pad) 3rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  gap: clamp(1.2rem, 4vw, 3rem);
+  align-items: center;
+}
+
+.labels-promo h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 3.5vw, 2.4rem);
+  line-height: 1.15;
+  margin: 0 0 1rem;
+}
+
+.labels-promo-copy p {
+  color: var(--ink-soft);
+  font-size: 1.05rem;
+  max-width: 34rem;
+}
+
+.client-card-mock {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1.1rem;
+  box-shadow: var(--shadow);
+}
+
+.client-card-head {
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+}
+
+.client-card-head strong {
+  display: block;
+}
+
+.client-card-meta {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.client-card-avatar {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 50%;
+  background: var(--fog);
+  color: var(--ink-soft);
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.client-card-labels {
+  margin: 0.9rem 0;
+}
+
+.client-chip {
+  display: inline-block;
+  padding: 0.25rem 0.7rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #fff;
+  background: var(--seg-ukhodyat);
+}
+
+.client-card-facts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+  margin: 0;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--line);
+}
+
+.client-card-facts dt {
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.client-card-facts dd {
+  margin: 0.15rem 0 0;
+  font-weight: 600;
+}
+
+.lead-form .optional {
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 400;
 }
 
 .roles-grid,
@@ -926,6 +1059,7 @@ textarea:focus-visible,
   }
 
   .charts-row,
+  .labels-promo,
   .roles-grid,
   .howto-grid,
   .flow-arms {

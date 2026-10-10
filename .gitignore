@@ -1,5 +1,6 @@
 node_modules
 dist
+exports/
 .DS_Store
 *.log
 .env
@@ -8,5 +9,13 @@ dist
 
 # Meeting recordings / transcripts (may contain real business details)
 *.m4a
+*.mp3
+*.wav
+*.ogg
+*.opus
+*.webm
+transcript-*.txt
+.ecc/
+desktop.ini
 новая-запись-*.json
 запись-*.json

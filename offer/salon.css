@@ -1,0 +1,728 @@
+:root {
+  --ink: #14241e;
+  --ink-soft: #243830;
+  --muted: rgba(20, 36, 30, 0.66);
+  --line: rgba(20, 36, 30, 0.14);
+  --paper: #f4f7f4;
+  --panel: #ffffff;
+  --accent: #b7793a;
+  --accent-soft: #e2b27c;
+  --teal: #1f6f5b;
+  --font-display: "Fraunces", "Times New Roman", serif;
+  --font-body: "Manrope", "Segoe UI", sans-serif;
+  --pad: 1rem;
+  --text: 38rem;
+  --wide: 58rem;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 1.125rem;
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--teal);
+  text-underline-offset: 0.18em;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.12;
+  margin: 0;
+  text-wrap: balance;
+}
+
+p {
+  margin: 0 0 0.85em;
+}
+
+/* ---------- First screen ---------- */
+
+.hero {
+  background: var(--ink);
+  color: #eef2ee;
+  padding: 1.6rem var(--pad) 1.8rem;
+}
+
+.hero-inner {
+  max-width: var(--wide);
+  margin: 0 auto;
+}
+
+.hero-label {
+  margin: 0 0 1.4rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: rgba(238, 242, 238, 0.72);
+}
+
+.hero h1 {
+  font-size: clamp(2.3rem, 9.4vw, 4.6rem);
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  max-width: 14ch;
+}
+
+.hero-pain {
+  margin: 1.1rem 0 1.6rem;
+  font-size: 1.2rem;
+  line-height: 1.5;
+  max-width: 34rem;
+  color: rgba(238, 242, 238, 0.9);
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.7rem 1.1rem;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3.2rem;
+  padding: 0.7rem 1.4rem;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 1.05rem;
+  text-decoration: none;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: var(--ink);
+  border: 1px solid var(--accent);
+}
+
+.btn-primary:hover {
+  background: var(--accent-soft);
+  border-color: var(--accent-soft);
+}
+
+.btn-ghost {
+  color: #eef2ee;
+  border: 1px solid rgba(238, 242, 238, 0.45);
+}
+
+.btn-ghost:hover {
+  border-color: #eef2ee;
+}
+
+.hero-phone {
+  color: #eef2ee;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.terms {
+  display: grid;
+  gap: 1rem;
+  margin: 1.8rem 0 0;
+  padding-top: 1.3rem;
+  border-top: 1px solid rgba(238, 242, 238, 0.2);
+}
+
+.terms dt {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: rgba(238, 242, 238, 0.66);
+}
+
+.terms dd {
+  margin: 0.15rem 0 0;
+  color: rgba(238, 242, 238, 0.85);
+}
+
+.terms-big {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--accent-soft);
+  white-space: nowrap;
+}
+
+/* ---------- Document ---------- */
+
+.doc {
+  display: grid;
+  grid-template-columns: [full-start] var(--pad) [wide-start text-start] minmax(0, 1fr) [text-end wide-end] var(--pad) [full-end];
+  padding-bottom: 3rem;
+}
+
+.block {
+  grid-column: full;
+  display: grid;
+  grid-template-columns: subgrid;
+  padding: 2.4rem 0 0.6rem;
+}
+
+.block > * {
+  grid-column: text;
+}
+
+.block + .block {
+  border-top: 1px solid var(--line);
+}
+
+.block h2 {
+  font-size: clamp(1.75rem, 6.4vw, 2.5rem);
+  margin-bottom: 1rem;
+}
+
+.block h3 {
+  font-size: 1.4rem;
+  margin: 1.8rem 0 0.6rem;
+}
+
+.lead {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  line-height: 1.4;
+  margin-top: 0.4rem;
+}
+
+.case-fact {
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  line-height: 1.35;
+}
+
+/* ---------- Screenshots ---------- */
+
+.shot {
+  margin: 1.4rem 0 1.8rem;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.shot img {
+  width: 100%;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+.shot figcaption {
+  margin-top: 0.6rem;
+  font-size: 1rem;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.strip-compact {
+  display: none;
+}
+
+/* On phones the full-width V4 strip shrinks text to ~6px; show its two ends side by side instead. */
+@media (max-width: 559px) {
+  .shot-strip img {
+    display: none;
+  }
+
+  .strip-compact {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 4.2rem;
+    padding: 0 0.9rem;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+  }
+
+  .strip-compact span {
+    height: 2.75rem;
+    background: url("/offer/visuals/v4-excel.png") no-repeat;
+    background-size: auto 100%;
+  }
+
+  .strip-compact .strip-left {
+    width: calc(2.75rem * 280 / 78);
+    background-position: left center;
+  }
+
+  .strip-compact .strip-right {
+    width: calc(2.75rem * 244 / 78);
+    background-position: right center;
+  }
+}
+
+/* ---------- Groups, flow, steps ---------- */
+
+.groups {
+  list-style: none;
+  margin: 0 0 0.6rem;
+  padding: 0;
+}
+
+.groups li {
+  position: relative;
+  padding: 0.55rem 0 0.55rem 1.6rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.groups li:last-child {
+  border-bottom: 0;
+}
+
+.groups li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 1.05rem;
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 3px;
+  background: var(--seg);
+}
+
+.flow p,
+.steps p {
+  padding: 0.9rem 0;
+  margin: 0;
+  border-top: 1px solid var(--line);
+}
+
+.flow p:first-child,
+.steps p:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.labels {
+  margin-top: 0.4rem;
+}
+
+.labels-text h3 {
+  margin-top: 0;
+  font-size: 1.55rem;
+}
+
+.term-line {
+  margin-top: 0.8rem;
+}
+
+/* ---------- Prices ---------- */
+
+.prices {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 1.2rem;
+}
+
+.prices thead th {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--muted);
+  text-align: left;
+  padding: 0 0 0.5rem;
+  border-bottom: 1px solid var(--ink);
+}
+
+.prices thead th:last-child,
+.prices td {
+  text-align: right;
+}
+
+.prices tbody th,
+.prices td {
+  padding: 0.95rem 0;
+  border-bottom: 1px solid var(--line);
+  vertical-align: baseline;
+}
+
+.prices tbody th {
+  font-weight: 500;
+  text-align: left;
+  padding-right: 1rem;
+}
+
+.prices td {
+  font-family: var(--font-display);
+  font-size: 1.55rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* ---------- Next step ---------- */
+
+.next-grid {
+  display: grid;
+  gap: 1.6rem;
+}
+
+.next-grid > div {
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+}
+
+.next-grid > div:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.next .btn {
+  margin-top: 0.2rem;
+}
+
+.contact {
+  line-height: 1.8;
+}
+
+/* ---------- Wider screens ---------- */
+
+@media (min-width: 560px) {
+  :root {
+    --pad: 1.6rem;
+  }
+
+  .hero {
+    padding: 2.4rem var(--pad) 2.6rem;
+  }
+
+  .terms {
+    grid-template-columns: 1.4fr 1fr;
+    gap: 2rem;
+  }
+}
+
+@media (min-width: 900px) {
+  :root {
+    --pad: 2.4rem;
+  }
+
+  .hero {
+    padding: 3.2rem var(--pad) 3.4rem;
+  }
+
+  .hero-label {
+    margin-bottom: 2.4rem;
+  }
+
+  .hero-pain {
+    font-size: 1.35rem;
+  }
+
+  .doc {
+    grid-template-columns:
+      [full-start] minmax(var(--pad), 1fr)
+      [wide-start] minmax(0, calc((var(--wide) - var(--text)) / 2))
+      [text-start] minmax(0, var(--text))
+      [text-end] minmax(0, calc((var(--wide) - var(--text)) / 2))
+      [wide-end] minmax(var(--pad), 1fr)
+      [full-end];
+  }
+
+  .block {
+    padding-top: 3.4rem;
+  }
+
+  .block > .shot-wide,
+  .block > .labels,
+  .block > .flow,
+  .block > .next-grid {
+    grid-column: wide;
+  }
+
+  .shot-wide {
+    margin: 2rem 0 2.4rem;
+  }
+
+  .flow,
+  .next-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+
+  .flow {
+    display: grid;
+    margin-bottom: 0.4rem;
+  }
+
+  .flow p,
+  .flow p:first-child,
+  .next-grid > div,
+  .next-grid > div:first-child {
+    border-top: 1px solid var(--ink);
+    padding-top: 0.9rem;
+  }
+
+  .labels {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 27rem);
+    gap: 2.6rem;
+    align-items: start;
+  }
+
+  .labels .shot {
+    margin: 0;
+  }
+}
+
+/* ---------- Print (A4) ---------- */
+
+@page {
+  size: A4;
+  margin: 10mm 12mm 11mm;
+}
+
+@media print {
+  html,
+  body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  body {
+    font-size: 10.5pt;
+    line-height: 1.45;
+    background: #fff;
+  }
+
+  p {
+    margin-bottom: 0.5em;
+  }
+
+  .hero {
+    padding: 6mm 7mm 5mm;
+    border-radius: 5px;
+  }
+
+  .hero h1 {
+    font-size: 24pt;
+    max-width: 16ch;
+  }
+
+  .hero-label {
+    margin-bottom: 2.5mm;
+    font-size: 9.5pt;
+  }
+
+  .hero-pain {
+    margin: 2.5mm 0 3.5mm;
+    font-size: 11.5pt;
+  }
+
+  .btn {
+    min-height: 0;
+    padding: 2mm 4.5mm;
+    font-size: 10pt;
+  }
+
+  .terms {
+    grid-template-columns: 1.4fr 1fr;
+    margin-top: 4mm;
+    padding-top: 3mm;
+    gap: 4mm;
+  }
+
+  .terms-big {
+    font-size: 15pt;
+  }
+
+  .doc {
+    display: block;
+    padding: 0;
+  }
+
+  .block {
+    display: block;
+    padding: 3.5mm 0 0;
+  }
+
+  .block + .block {
+    padding-top: 3.5mm;
+  }
+
+  .block h2 {
+    font-size: 16pt;
+    margin-bottom: 2.5mm;
+  }
+
+  .block h3 {
+    font-size: 12.5pt;
+    margin: 3mm 0 1.2mm;
+  }
+
+  .lead,
+  .case-fact {
+    font-size: 13pt;
+  }
+
+  h2,
+  h3 {
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  .shot,
+  .prices,
+  .flow,
+  .steps p,
+  .next-grid > div {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .shot {
+    margin: 2.5mm 0 3mm;
+  }
+
+  .shot figcaption {
+    margin-top: 1.4mm;
+    font-size: 9.5pt;
+  }
+
+  .shot img {
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    max-height: 88mm;
+    margin-inline: auto;
+    border-radius: 6px;
+  }
+
+  .shot-wide img {
+    max-height: 92mm;
+  }
+
+  .shot-mid img {
+    max-height: 70mm;
+  }
+
+  .shot-card img {
+    max-height: 48mm;
+  }
+
+  .shot-strip img {
+    width: 100%;
+    max-height: none;
+  }
+
+  .groups li {
+    padding: 1.4mm 0 1.4mm 5mm;
+  }
+
+  .groups li::before {
+    top: 2.4mm;
+    width: 2.4mm;
+    height: 2.4mm;
+  }
+
+  .flow p,
+  .steps p {
+    padding: 1.8mm 0;
+  }
+
+  .labels {
+    display: grid;
+    grid-template-columns: 1fr 68mm;
+    gap: 5mm;
+    align-items: start;
+  }
+
+  .labels .shot {
+    margin: 0;
+  }
+
+  .flow,
+  .next-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4mm;
+  }
+
+  .flow p,
+  .flow p:first-child,
+  .next-grid > div,
+  .next-grid > div:first-child {
+    border-top: 1px solid var(--ink);
+    padding-top: 2mm;
+  }
+
+  .prices {
+    margin-bottom: 2.5mm;
+  }
+
+  .prices tbody th,
+  .prices td {
+    padding: 1.8mm 0;
+  }
+
+  .prices td {
+    font-size: 13pt;
+  }
+
+  .term-line {
+    margin-top: 2mm;
+  }
+
+  .next-grid {
+    gap: 4mm;
+  }
+
+  .cost {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .cost .prices tbody th,
+  .cost .prices td {
+    padding: 3.2mm 0;
+  }
+
+  .cost .prices td {
+    font-size: 16pt;
+  }
+
+  .next {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    margin-top: 2mm;
+  }
+
+  .next-grid {
+    gap: 7mm;
+  }
+
+  .next-grid > div,
+  .next-grid > div:first-child {
+    padding-top: 3.5mm;
+  }
+
+  .next .btn {
+    margin-top: 3mm;
+    padding: 2.8mm 6mm;
+  }
+
+  .next-grid a {
+    overflow-wrap: anywhere;
+    font-size: 9.5pt;
+    line-height: 1.35;
+  }
+}

@@ -8,7 +8,7 @@ echarts.use([PieChart, BarChart, TooltipComponent, LegendComponent, GridComponen
 
 const SEGMENT_COLORS: Record<string, string> = {
   Ядро: "#1f6f5b",
-  Новички: "#3d8b74",
+  Новички: "#4f7fae",
   Растут: "#c4a35a",
   Уходят: "#b86b5a",
   Спящие: "#8a9390",
@@ -36,7 +36,12 @@ export function disposeCharts(): void {
   charts.clear();
 }
 
-export function renderSegmentPies(clientsEl: HTMLElement, revenueEl: HTMLElement, segments: SegmentRow[]): void {
+export function renderSegmentPies(
+  clientsEl: HTMLElement,
+  revenueEl: HTMLElement,
+  segments: SegmentRow[],
+  onSegmentClick?: (name: string) => void,
+): void {
   const clients = ensureChart(clientsEl, "pie-clients");
   const revenue = ensureChart(revenueEl, "pie-revenue");
   const clientData = segments.map((s) => ({
@@ -64,6 +69,16 @@ export function renderSegmentPies(clientsEl: HTMLElement, revenueEl: HTMLElement
   };
   clients.setOption({ ...base, series: [{ ...base.series[0], data: clientData }] }, true);
   revenue.setOption({ ...base, series: [{ ...base.series[0], data: revenueData }] }, true);
+  if (onSegmentClick) {
+    for (const chart of [clients, revenue]) {
+      chart.off("click");
+      chart.on("click", (params) => {
+        if (params.componentType === "series" && typeof params.name === "string") {
+          onSegmentClick(params.name);
+        }
+      });
+    }
+  }
 }
 
 export function renderAdsBars(el: HTMLElement, channels: { channel: string; clients: number }[]): void {
